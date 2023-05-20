@@ -1,0 +1,52 @@
+- hosts: all
+  tasks:
+  - debug:
+      msg: "Variable is {{ ansible_os_family }}"
+
+  - name: Install Apache on CentOS
+    yum:
+      name: 
+        - httpd
+        - unzip
+      state: latest
+    when: ansible_os_family == "RedHat"
+
+  - name: Install apache httpd  (state=present is optional)
+    apt:
+      name: 
+        - apache2
+        - unzip
+      state: present
+    when: ansible_os_family == "Debian"
+
+  - name: Start httpd
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+    when: ansible_os_family == "RedHat"
+
+  - name: stop service cron on debian, if running
+    systemd:
+      name: cron
+      state: started
+    when: ansible_os_family == "Debian"
+
+  - name: Unarchive the template
+    unarchive:
+      src: https://www.free-css.com/assets/files/free-css-templates/download/page280/heustonn.zip
+      dest: /root/
+      remote_src: yes
+
+  - name: Move extracted files
+    shell: "rsync -a heustonn-html/ /var/www/html/"
+
+  - name: Put SELinux in permissive mode
+    selinux:
+      policy: targeted
+      state: permissive
+
+  
+  
+    
+    
