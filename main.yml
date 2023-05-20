@@ -3,7 +3,7 @@
   - debug:
       msg: "Variable is {{ ansible_os_family }}"
 
-  - name: Install Apache on CentOS
+  - name: Install httpd and unzip package
     yum:
       name: 
         - httpd
@@ -11,7 +11,7 @@
       state: latest
     when: ansible_os_family == "RedHat"
 
-  - name: Install apache httpd  (state=present is optional)
+  - name: Install apache httpd  and unzip
     apt:
       name: 
         - apache2
